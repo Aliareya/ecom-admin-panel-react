@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -61,7 +62,27 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
-				}
+				},
+				brand: {
+					100: '#F2EFFF',
+					200: '#DCD4FF',
+					300: '#C2B5FD',
+					400: '#9B87F5',
+					500: '#8B5CF6',
+					600: '#7246E5',
+					700: '#5E33D2',
+					800: '#4B23B8',
+					900: '#3E1F95',
+				},
+				dashboard: {
+					revenue: '#33C3F0',
+					orders: '#8B5CF6',
+					customers: '#F97316',
+					conversion: '#0EA5E9',
+				},
+			},
+			fontFamily: {
+				sans: ['Inter', 'sans-serif'],
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
@@ -84,11 +105,31 @@ export default {
 					to: {
 						height: '0'
 					}
-				}
+				},
+				"fade-in": {
+					"0%": {
+						opacity: "0",
+						transform: "translateY(10px)"
+					},
+					"100%": {
+						opacity: "1",
+						transform: "translateY(0)"
+					}
+				},
+				"slide-in": {
+					"0%": {
+						transform: "translateX(-100%)"
+					},
+					"100%": {
+						transform: "translateX(0)"
+					}
+				},
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
-				'accordion-up': 'accordion-up 0.2s ease-out'
+				'accordion-up': 'accordion-up 0.2s ease-out',
+				'fade-in': 'fade-in 0.3s ease-out',
+				'slide-in': 'slide-in 0.3s ease-out',
 			}
 		}
 	},
