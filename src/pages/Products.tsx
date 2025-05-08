@@ -37,6 +37,8 @@ import {
 import { AddProductForm } from "@/components/products/AddProductForm";
 import { AddCategoryForm } from "@/components/products/AddCategoryForm";
 import { CategoryList } from "@/components/products/CategoryList";
+import { EditProductForm } from "@/components/products/EditProductForm";
+import { EditCategoryForm } from "@/components/products/EditCategoryForm";
 import { toast } from "sonner";
 
 type Product = {
@@ -170,6 +172,10 @@ const Products = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [isAddProductOpen, setIsAddProductOpen] = useState(false);
   const [isAddCategoryOpen, setIsAddCategoryOpen] = useState(false);
+  const [isEditProductOpen, setIsEditProductOpen] = useState(false);
+  const [isEditCategoryOpen, setIsEditCategoryOpen] = useState(false);
+  const [currentProduct, setCurrentProduct] = useState<Product | null>(null);
+  const [currentCategory, setCurrentCategory] = useState<Category | null>(null);
 
   // Filter products based on search term
   const filteredProducts = products.filter(product => 
@@ -219,9 +225,35 @@ const Products = () => {
 
   // Handle editing a category
   const handleEditCategory = (id: string) => {
-    // For demo purposes, just show a toast
     const category = categories.find(c => c.id === id);
-    toast.info(`Editing category: ${category?.name}`);
+    if (category) {
+      setCurrentCategory(category);
+      setIsEditCategoryOpen(true);
+    }
+  };
+
+  // Handle updating a category
+  const handleUpdateCategory = (categoryData: any) => {
+    if (!currentCategory) return;
+    
+    setCategories(categories.map(cat => 
+      cat.id === currentCategory.id 
+        ? { ...cat, name: categoryData.name, description: categoryData.description || "" } 
+        : cat
+    ));
+    
+    // Update category name in products if it changed
+    if (currentCategory.name !== categoryData.name) {
+      setProducts(products.map(prod => 
+        prod.category === currentCategory.name 
+          ? { ...prod, category: categoryData.name } 
+          : prod
+      ));
+    }
+    
+    toast.success("Category updated successfully");
+    setIsEditCategoryOpen(false);
+    setCurrentCategory(null);
   };
 
   // Handle deleting a category
@@ -239,15 +271,69 @@ const Products = () => {
 
   // Handle editing a product
   const handleEditProduct = (id: string) => {
-    // For demo purposes, just show a toast
     const product = products.find(p => p.id === id);
-    toast.info(`Editing product: ${product?.name}`);
+    if (product) {
+      setCurrentProduct(product);
+      setIsEditProductOpen(true);
+    }
+  };
+  
+  // Handle updating a product
+  const handleUpdateProduct = (productData: any) => {
+    if (!currentProduct) return;
+    
+    const updatedProduct = {
+      ...currentProduct,
+      name: productData.name,
+      category: categories.find(c => c.id === productData.category)?.name || currentProduct.category,
+      price: `$${Number(productData.price).toFixed(2)}`,
+      stock: Number(productData.stock),
+      status: productData.status as 'active' | 'out_of_stock' | 'discontinued',
+    };
+    
+    // Update the product
+    setProducts(products.map(p => 
+      p.id === currentProduct.id ? updatedProduct : p
+    ));
+    
+    // If category changed, update category product counts
+    if (updatedProduct.category !== currentProduct.category) {
+      // Decrement old category
+      setCategories(categories.map(cat => 
+        cat.name === currentProduct.category 
+          ? { ...cat, productCount: Math.max(0, cat.productCount - 1) } 
+          : cat
+      ));
+      
+      // Increment new category
+      setCategories(categories.map(cat => 
+        cat.name === updatedProduct.category 
+          ? { ...cat, productCount: cat.productCount + 1 } 
+          : cat
+      ));
+    }
+    
+    toast.success("Product updated successfully");
+    setIsEditProductOpen(false);
+    setCurrentProduct(null);
   };
 
   // Handle deleting a product
   const handleDeleteProduct = (id: string) => {
-    setProducts(products.filter(p => p.id !== id));
-    toast.success("Product deleted successfully");
+    const product = products.find(p => p.id === id);
+    
+    if (product) {
+      // Update category count
+      setCategories(categories.map(cat => 
+        cat.name === product.category 
+          ? { ...cat, productCount: Math.max(0, cat.productCount - 1) } 
+          : cat
+      ));
+      
+      // Remove product
+      setProducts(products.filter(p => p.id !== id));
+      toast.success("Product deleted successfully");
+    }
   };
 
   return (
@@ -405,12 +491,39 @@ const Products = () => {
         onAddProduct={handleAddProduct}
       />
       
+      {/* Edit Product Dialog */}
+      {currentProduct && (
+        <EditProductForm 
+          open={isEditProductOpen} 
+          onClose={() => {
+            setIsEditProductOpen(false);
+            setCurrentProduct(null);
+          }}
+          categories={categories}
+          product={currentProduct}
+          onUpdateProduct={handleUpdateProduct}
+        />
+      )}
+      
       {/* Add Category Dialog */}
       <AddCategoryForm 
         open={isAddCategoryOpen}
         onClose={() => setIsAddCategoryOpen(false)}
         onAddCategory={handleAddCategory}
       />
+      
+      {/* Edit Category Dialog */}
+      {currentCategory && (
+        <EditCategoryForm 
+          open={isEditCategoryOpen}
+          onClose={() => {
+            setIsEditCategoryOpen(false);
+            setCurrentCategory(null);
+          }}
+          category={currentCategory}
+          onUpdateCategory={handleUpdateCategory}
+        />
+      )}
     </div>
   );
 };
