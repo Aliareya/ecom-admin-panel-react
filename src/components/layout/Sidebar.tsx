@@ -10,7 +10,8 @@ import {
   Users, 
   Settings, 
   BarChart, 
-  Store
+  Store,
+  Folder
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -28,6 +29,11 @@ const Sidebar = () => {
       title: 'Products',
       icon: Package,
       href: '/products',
+    },
+    {
+      title: 'Categories',
+      icon: Folder,
+      href: '/products?tab=categories',
     },
     {
       title: 'Orders',
@@ -81,7 +87,10 @@ const Sidebar = () => {
       <nav className="mt-6 px-3">
         <ul className="space-y-1">
           {menuItems.map((item) => {
-            const isActive = location.pathname === item.href;
+            // Special handling for the Categories tab
+            const isActive = item.href === '/products?tab=categories' 
+              ? location.pathname === '/products' && location.search.includes('tab=categories')
+              : location.pathname === item.href;
             
             return (
               <li key={item.href}>
