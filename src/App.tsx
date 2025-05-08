@@ -9,6 +9,7 @@ import Products from "./pages/Products";
 import Orders from "./pages/Orders";
 import Customers from "./pages/Customers";
 import Settings from "./pages/Settings";
+import Profile from "./pages/Profile";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import { SidebarProvider } from "./components/layout/SidebarProvider";
@@ -34,6 +35,7 @@ const App = () => (
             <Route path="/products" element={<Products />} />
             <Route path="/orders" element={<Orders />} />
             <Route path="/customers" element={<Customers />} />
+            <Route path="/profile" element={<Profile />} />
             <Route path="/settings" element={<Settings />} />
           </Route>
           <Route path="*" element={<NotFound />} />

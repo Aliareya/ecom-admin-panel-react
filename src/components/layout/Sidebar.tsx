@@ -11,7 +11,8 @@ import {
   Settings, 
   BarChart, 
   Store,
-  Folder
+  Folder,
+  UserRound
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -49,6 +50,11 @@ const Sidebar = () => {
       title: 'Analytics',
       icon: BarChart,
       href: '/analytics',
+    },
+    {
+      title: 'Profile',
+      icon: UserRound,
+      href: '/profile',
     },
     {
       title: 'Settings',

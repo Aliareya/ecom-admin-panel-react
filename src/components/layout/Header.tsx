@@ -2,6 +2,7 @@
 import { Bell, Search } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Input } from '@/components/ui/input';
+import { useNavigate } from 'react-router-dom';
 import { 
   DropdownMenu, 
   DropdownMenuContent, 
@@ -12,6 +13,8 @@ import {
 } from '@/components/ui/dropdown-menu';
 
 const Header = () => {
+  const navigate = useNavigate();
+  
   return (
     <header className="h-16 border-b border-gray-200 bg-white flex items-center justify-between px-6">
       <div className="w-full max-w-md relative">
@@ -45,7 +48,7 @@ const Header = () => {
             <div className="flex items-center gap-2 cursor-pointer">
               <Avatar className="h-8 w-8 cursor-pointer hover:ring-2 hover:ring-brand-400 transition-all">
                 <AvatarImage src="https://github.com/shadcn.png" />
-                <AvatarFallback>CN</AvatarFallback>
+                <AvatarFallback>AU</AvatarFallback>
               </Avatar>
               <div className="text-sm">
                 <p className="font-medium">Admin User</p>
@@ -55,11 +58,11 @@ const Header = () => {
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>My Account</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>Profile</DropdownMenuItem>
-            <DropdownMenuItem>Settings</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => navigate('/profile')}>Profile</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => navigate('/settings')}>Settings</DropdownMenuItem>
             <DropdownMenuItem>Support</DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>Log out</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => navigate('/login')}>Log out</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
